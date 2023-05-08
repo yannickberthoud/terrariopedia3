@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock title %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        {% if request.user.profile.profile_picture %}
+        <img src="{{ profile_form.instance.profile_picture.url }}" height="200" width="300" class="figure-img img-fluid rounded mt-2" alt="TerrarioPedia - {{ request.user.get_full_name }}">
+        {% else %}
+        <img src="{% static 'image/no_picture.jpg' %}" height="200" width="300" class="figure-img img-fluid rounded mt-2" alt="TerrarioPedia - {{ request.user.get_full_name }}">
+        {% endif %}
+    </div>
+    <div class="col-md-9">
+        <h1>Mon compte</h1>
+<a href="{% url 'password_change' %}" title="Terrariopedia - Modifier le mot de passe">Modifier le mot de passe</a>
+{% if form.errors %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <div id="form_errors">
+            {% for key, value in form.errors.items %}
+                <strong>{{ value }}</strong>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+    <div class="form-content">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                         <label class="small mb-1">Nom:</label>
+                            {{ user_form.last_name }}
+                         <label class="small mb-1">Prénom:</label>
+                            {{ user_form.first_name }}
+                        <label class="small mb-1">Nom d'utilisateur:</label>
+                            {{ user_form.username }}
+                        <label class="small mb-1">Email:</label>
+                            {{ user_form.email }}
+                        <label class="small mb-1">Pays:</label>
+                        {{ profile_form.country }}<br />
+                        <label class="small mb-1">Photo de profile</label>
+                        {{ profile_form.profile_picture }}
+                        <label class="small mb-1">Vos espèces actuelles:</label>
+                        {{ profile_form.current_species }}
+
+                        {{ profile_form.user }}
+
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-primary btn-lg">Sauvegarder</button>
+        </form>
+    </div>
+    </div>
+</div>
+{% endblock content %}

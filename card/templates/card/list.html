@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Recherche {{ query }}{% endblock %}
+
+{% block content %}
+{% if query %}
+    <b>Votre recherche:</b> {{ query }}
+{% endif %}
+{% if snakes %}
+    <div class="row">
+        <h2>Serpents</h2>
+        {% for object in snakes %}
+            <div class="col-sm-3">
+                <div class="card mt-1">
+                    <img src="{{ object.image.url }}"  height="200" width="300" class="card-img-top" alt="TerrarioPedia - Fiches d'élevage de {{ object.get_scientific_name }}">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'snake_details' object.slug %}" title="TerrarioPedia - Fiches d'élevage de {{ object.get_scientific_name }}">{{ object.get_scientific_name }}</a></h5>
+                  </div>
+                </div>
+              </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% if amphibians %}
+
+    <div class="row">
+        <h2>Amphibiens</h2>
+        {% for object in amphibians %}
+            <div class="col-sm-3">
+                <div class="card mt-1">
+                    <img src="{{ object.image.url }}"  height="200" width="300" class="card-img-top" alt="TerrarioPedia - Fiches d'élevage de {{ object.get_scientific_name }}">
+                  <div class="card-body">
+                    <h5 class="card-title"><a href="{% url 'amphibian_details' object.slug %}" title="TerrarioPedia - Fiches d'élevage de {{ object.get_scientific_name }}">{{ object.get_scientific_name }}</a></h5>
+                  </div>
+                </div>
+              </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+
+  <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+    <li>
+      <a href="{% url 'snake_list' %}" class="nav-link px-2 link-dark" title="TerrarioPedia - Fiches d'élevage de serpents">Serpents</a>
+    </li>
+      <li>
+      <a href="{% url 'amphibian_list' %}" class="nav-link px-2 link-dark" title="TerrarioPedia - Fiches d'élevage des amphibiens">Amphibiens</a>
+    </li>
+    <!--<li>
+      <a href="{% url 'faq-list' %}" class="nav-link px-2 link-dark"  title="TerrarioPedia - Foire aux questions serpents, reptiles et amphibiens">FAQ</a>
+    </li>-->
+    {% load flatpages %}
+    {% get_flatpages as flatpages %}
+    {% if flatpages %}
+    <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Informations
+          </a>
+          <ul class="dropdown-menu">
+            {% for page in flatpages %}
+                <li><a href="{{ page.url }}" class="nav-link px-2 link-dark" title="TerrarioPedia - {{ page.title }}">{{ page.title }}</a></li>
+            {% endfor %}
+          </ul>
+    </li>
+    {% endif %}
+    <li>
+      <a href="{% url 'card-link:card-about' %}" class="nav-link px-2 link-dark" title="TerrarioPedia - À propos des fiches d'élevage">Informations prioritaires</a>
+    </li>
+  </ul>

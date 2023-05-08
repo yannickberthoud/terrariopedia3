@@ -1,0 +1,138 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'flags/sprite.css' %}">
+    <title>TerrarioPedia - {% block title %}{% endblock %}</title>
+</head>
+<body class="d-flex flex-column h-100">
+<div class="container-fluid">
+    <nav class="py-2 bg-body-tertiary border-bottom">
+        <div class="container d-flex flex-wrap">
+            <ul class="nav me-auto">
+                {% load flatpages %}
+                {% get_flatpages as flatpages %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Base de connaissance
+                  </a>
+                  <ul class="dropdown-menu">
+                      {% for page in flatpages %}
+                        <li><a href="{{ page.url }}" class="dropdown-item" title="TerrarioPedia - {{ page.title }}">{{ page.title }}</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                <li class="nav-item"><a href="{% url 'amphibian_list' %}"
+                                        title="TerrarioPedia - Fiches d'élevage d'amphibiens"
+                                        class="nav-link link-dark px-2">Amphibiens</a></li>
+                <li class="nav-item"><a href="{% url 'lizard_list' %}"
+                                        title="TerrarioPedia - Fiches d'élevage de lézards"
+                                        class="nav-link link-dark px-2">Lézards</a></li>
+                <li class="nav-item"><a href="{% url 'snake_list' %}"
+                                        title="TerrarioPedia - Fiches d'élevage de serpents"
+                                        class="nav-link link-dark px-2">Serpents</a></li>
+                <li class="nav-item"><a href="{% url 'ads_list' %}"
+                                        title="TerrarioPedia - Petites annonces"
+                                        class="nav-link link-dark px-2">Petites annonces</a></li>
+                <li class="nav-item"><a href="{% url 'community_list' %}"
+                                        title="TerrarioPedia - Membre de la communauté"
+                                        class="nav-link link-dark px-2">Communauté</a></li>
+            </ul>
+            {% if request.user.is_authenticated %}
+            <ul class="nav">
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {% if request.user.profile.profile_picture %}
+                        <img src="{{ request.user.profile.profile_picture.url }}" height="32" width="32" class="img-fluid rounded" alt="TerrarioPedia - {{ request.user.get_full_name }}">
+                    {% else %}
+                        <img src="{% static 'image/no_picture.jpg' %}" height="32" width="32" class="img-fluid rounded" alt="TerrarioPedia - {{ request.user.get_full_name }}">
+                    {% endif %}
+                    Mon compte
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{% url 'ads_own_list' %}" title="TerrarioPedia - Afficher mes annonces">Mes annonces</a></li>
+                    <li><a href="{% url 'ads_create' %}" class="dropdown-item" title="TerrarioPedia - Publier une annonces">Publier une annonce</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                      <li><a href="{% url 'profile' %}" class="dropdown-item" title="TerrarioPedia - Editer mon profil">Editer mon profil</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a href="{% url 'logout' %}" class="dropdown-item" title="TerrarioPedia - Déconnexion">Déconnexion</a></li>
+                  </ul>
+                </li>
+            </ul>
+            {% else %}
+            <ul class="nav">
+                <li class="nav-item"><a href="{% url 'login' %}" class="nav-link link-dark px-2">Connexion</a></li>
+                <li class="nav-item"><a href="{% url 'register' %}" class="nav-link link-dark px-2">Inscription</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </nav>
+    <header class="py-3 mb-4 border-bottom">
+        <div class="container d-flex flex-wrap justify-content-center">
+            <a href="/"
+               class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto link-body-emphasis text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">TerrarioPedia</span>
+            </a>
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0" role="search" method="POST" action="{% url 'search_cards' %}">
+                {% csrf_token %}
+                <input type="search" name="query" class="form-control" placeholder="Rechercher une espèce" aria-label="Search">
+            </form>
+        </div>
+    </header>
+</div>
+
+<div class="container mt-5 flex-shrink-0">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+</div>
+
+<footer class="footer mt-5 py-3 bg-light">
+    <div class="container bg-body-tertiary">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Communauté</h3>
+                <ul class="list-group list-group-flush bg-body-tertiary">
+                    <li class="list-group-item bg-body-tertiary"><a href="https://discord.gg/wdM75gDgNx"
+                                        target="_blank"
+                                        title="TerrarioPedia - Rejoindre le Discord" class="text-decoration-none">
+                    Rejoignez-nous sur Discord!
+                </a></li>
+          <li class="list-group-item bg-body-tertiary"><a href="{% url 'suggestion_list' %}" title="TerrarioPedia - Suggestions d'amélioration" class="text-decoration-none">Suggérez une modification</a></li>
+        </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+<script src="{% static 'js/jquery-3.6.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PYE2JP68HV"></script>
+<script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-PYE2JP68HV');
+</script>
+</body>
+</html>
